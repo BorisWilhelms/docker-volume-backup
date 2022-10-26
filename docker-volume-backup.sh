@@ -22,7 +22,7 @@ restart_containers() {
 
 trap restart_containers EXIT
 
-RUNNING_CONTAINERS=$(docker ps -q)
+RUNNING_CONTAINERS=$(docker ps --format '{{.Label "start_order"}} {{.ID}}' | sort | cut -d ' ' -f2)
 docker stop $RUNNING_CONTAINERS >> /dev/null
  
 VOLUMES=$(docker volume inspect $(docker volume ls --format "{{ .Name }}" --filter driver=local) \
